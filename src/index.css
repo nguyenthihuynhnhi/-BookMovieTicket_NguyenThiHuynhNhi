@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.heading-1 {
+	@apply text-2xl font-black 
+	sm:text-3xl 
+	lg:text-4xl lg:leading-normal
+	2xl:text-5xl 2xl:leading-normal;
+}
+
+.para-1 {
+	@apply text-lg font-normal 
+	sm:text-xl
+	lg:text-2xl;
+}
+
+.heading-3 {
+	@apply text-sm font-normal leading-normal
+	sm:text-base
+	lg:text-xl;
+}
+
+.ant-collapse-header {
+	align-items: center !important;
+}
+
+.SwiperDesktop {
+	height: 100%;
+	overflow-y: unset;
+	overflow: unset;
+	@apply mx-[calc(4%+2px)] sm:mx-[calc(4%+3px)] md:mx-[calc(4%+4px)] lg:mx-[calc(4%+5px)] xl:mx-[calc(4%+5px)] 2xl:mx-[68px];
+}
+
+.SwiperDesktop .swiper-slide {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	@apply bg-backgroundHome;
+}
+
+.SwiperDesktop .swiper-slide img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.SwiperDesktop .swiper-button-next {
+	background-color: red;
+}
+
+.SwiperDesktop .swiper-button-prev {
+	background-color: red;
+}
+.SwiperDesktop .swiper-pagination {
+	text-align: end;
+	top: unset !important;
+	bottom: 103% !important;
+	right: 0;
+	left: unset !important;
+	width: 50% !important;
+}
+
+.SwiperDesktop .swiper-pagination-bullet {
+	width: 2%;
+	background-color: gray;
+	border-radius: unset;
+	@apply w-[8px] mx-[1px] h-[1px] md:h-[2px] md:w-[19px] md:mx-[3px] xl:w-[26px] xl:mx-[3px] 2xl:w-[1.2vw] 2xl:mx-[0.2vw] 2xl:h-[0.15vw] !important;
+}
+
+/*! SCROLLBAR - start */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(100, 116, 139, 0.502) rgba(100, 116, 139, 0.161);
+}
+*::-webkit-scrollbar {
+	width: 6px;
+}
+/* CSS cho thanh cuộn ngang */
+*::-webkit-scrollbar:horizontal {
+	height: 6px;
+}
+*::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track:horizontal,
+*::-webkit-scrollbar-corner {
+	background-color: rgba(100, 116, 139, 0.161);
+}
+*::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb:horizontal {
+	border-radius: 5px;
+	background-color: rgba(100, 116, 139, 0.502);
+}
+/* SCROLLBAR - end */
+
+:where(.css-dev-only-do-not-override-1iacbu2).ant-tabs .ant-tabs-ink-bar {
+	@apply bg-primary;
+}
+:where(.css-dev-only-do-not-override-1iacbu2).ant-tabs .ant-tabs-tab:hover,
+:where(.css-dev-only-do-not-override-1iacbu2).ant-tabs .ant-tabs-tab-btn:focus:not(:focus-visible) {
+	@apply text-white;
+}
+:where(.css-dev-only-do-not-override-1iacbu2).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+	@apply text-white/90;
+}
+
+.ant-table {
+	background-color: transparent !important;
+}
+
+:where(.css-dev-only-do-not-override-1iacbu2).ant-table-wrapper .ant-table-tbody > tr.ant-table-row:hover > th,
+:where(.css-dev-only-do-not-override-1iacbu2).ant-table-wrapper .ant-table-tbody > tr.ant-table-row:hover > td,
+:where(.css-dev-only-do-not-override-1iacbu2).ant-table-wrapper .ant-table-tbody > tr > th.ant-table-cell-row-hover,
+:where(.css-dev-only-do-not-override-1iacbu2).ant-table-wrapper .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+	@apply bg-gray-800/80;
+}
+
+.ant-tabs-tab-btn {
+	width: 100%;
+	border-radius: 0.5rem;
+	overflow: hidden;
+}
+.ant-tabs-tabpane {
+	padding-left: 0 !important;
+}
+.ant-popover {
+	z-index: 1001;
+}
+.ant-table-cell {
+	word-break: break-all;
+}
+
+.container-home {
+	width: 100%;
+	@apply px-[4%] 2xl:px-[60px];
+}
+/* @media (min-width: 640px) {
+	.container-home {
+
+	}
+}
+@media (min-width: 768px) {
+	.container-home {
+	
+	}
+}
+@media (min-width: 1024px) {
+	.container-home {
+	
+	}
+}
+@media (min-width: 1280px) {
+	.container-home {
+		
+	}
+}
+@media (min-width: 1536px) {
+	.container-home {
+		
+	}
+} */
