@@ -2,26 +2,26 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
 	modalMovieActive: {},
-	playingModalMovie: false,
-	playAgain: false,
+	locationMovieEl: null,
+	isOpenModalMovie: false,
 };
 
 const modalMovieSlice = createSlice({
 	name: "modalMovieSlice",
 	initialState,
 	reducers: {
-		setModalMovieActive: (state, { payload }) => {
+		setModalMovieActiveREDU: (state, { payload }) => {
 			state.modalMovieActive = payload;
 		},
-		setPlayingModalMovie: (state, { payload }) => {
-			state.playingModalMovie = payload;
+		setLocationMovieEl: (state, { payload }) => {
+			state.locationMovieEl = payload;
 		},
-		playAgain: (state) => {
-			state.playAgain = !state.playAgain ;
+		setIsOpenModalMovieREDU: (state, { payload }) => {
+			state.isOpenModalMovie = payload;
 		},
 	},
 });
 
-export const { setModalMovieActive, setPlayingModalMovie, playAgain } = modalMovieSlice.actions;
+export const { setIsOpenModalMovieREDU, setLocationMovieEl, setModalMovieActiveREDU } = modalMovieSlice.actions;
 
 export default modalMovieSlice.reducer;

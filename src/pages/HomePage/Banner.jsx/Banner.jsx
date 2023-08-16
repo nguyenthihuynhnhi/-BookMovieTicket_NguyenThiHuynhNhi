@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ReactPlayer from "react-player/youtube";
 import Button from "../../../components/Button/Button";
 import IconPlay from "../../../components/Icons/IconPlay";
@@ -14,25 +14,30 @@ import { navigate } from "../../../App";
 import { Link } from "react-scroll";
 const { Paragraph } = Typography;
 
-function Banner({ listMovie }) {
+function Banner() {
 	const dispatch = useDispatch();
 	const { playingBanner } = useSelector((state) => state.bannerHomeSlice);
+	const { listMovie } = useSelector((state) => state.movieSlice);
+
 	const randomIndex = useMemo(() => Math.floor(Math.random() * listMovie.length), []);
 	const movie = listMovie[randomIndex];
 	const url = movie?.trailer;
-
-	// const baseUrl = "https://www.youtube.com/embed/";
-	// const id2 = "OaDdVqW5CeE";
 
 	const [isMuted, setIsMuted] = useState(true);
 
 	const playerRef = useRef(null);
 	const imgHeroRef = useRef(null);
 
+	useEffect(() => {
+		dispatch(setPlayingBannerREDU(true));
+		console.log("OKE");
+	}, []);
+
 	const handlePlayAgain = () => {
 		const player = playerRef.current.getInternalPlayer();
 		player.seekTo(0);
 		dispatch(setPlayingBannerREDU(true));
+		console.log("OKE");
 		dispatch(setEndedBannerREDU(false));
 	};
 	const toggleMute = () => {
@@ -61,8 +66,9 @@ function Banner({ listMovie }) {
 		// console.log("playedSeconds", playedSeconds);
 		// console.log("timePause", timePause);
 		// console.log(playedSeconds > timePause);
-		if (playedSeconds > 5) {
+		if (playedSeconds > timePause) {
 			dispatch(setPlayingBannerREDU(false));
+			console.log("OKE");
 			dispatch(setEndedBannerREDU(true));
 		}
 	};
@@ -114,10 +120,10 @@ function Banner({ listMovie }) {
 	};
 
 	const handleDetailMovie = (movie) => {
-		navigate(`/detail/${movie.maPhim}`);
+		navigate(`/detail/${movie._id}`);
 	};
 	const handleBuyMovie = (movie) => {
-		navigate(`/detail/${movie.maPhim}#detailTab`);
+		navigate(`/detail/${movie._id}#detailTab`);
 	};
 	return (
 		<section
@@ -195,9 +201,9 @@ function Banner({ listMovie }) {
 					>
 						<h1
 							className="font-black truncate leading-none
-                            lg:text-3xl
-                            xl:text-4xl
-                            2xl:text-5xl
+                            lg:text-3xl lg:leading-tight
+                            xl:text-4xl xl:leading-tight
+                            2xl:text-5xl 2xl:leading-snug
                             "
 							// text-center
 							// xl:text-start
@@ -213,7 +219,6 @@ function Banner({ listMovie }) {
 							xl:text-xl
 							2xl:text-2xl
                             "
-							
 						>
 							{movie?.moTa}
 						</Paragraph>

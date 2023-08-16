@@ -1,4 +1,4 @@
-import { Tabs } from "antd";
+import { Tabs, Tag } from "antd";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { Typography } from "antd";
@@ -55,7 +55,7 @@ function DetailTab() {
 							}}
 						>
 							<div className="flex gap-2 rounded-lg items-center  ">
-								<div className="flex w-14 items-center flex-shrink-0">
+								<div className="flex w-14 items-center flex-shrink-0 rounded-md overflow-hidden">
 									<img className="w-full" src={cumRap.hinhAnh} />
 								</div>
 								<div className="text-start flex-grow overflow-hidden">
@@ -85,11 +85,16 @@ function DetailTab() {
 		const renderContentTime = (formattedArray) => {
 			return formattedArray.map((date, i) => {
 				const id = String(i + 1);
+				const dd = date.time.date.split(" ")[0];
+				const hh = date.time.date.split(" ")[1];
 				return {
 					label: (
-						<div className="flex flex-col gap-1 items-center">
-							<p>{date.time.dayOfWeek}</p>
-							<p>{date.time.date}</p>
+						<div className="flex flex-col gap-1 items-center ">
+							<p className="text-gray-300">{date.time.dayOfWeek}</p>
+							<p className="font-semibold">{dd}</p>
+							<Tag className="m-0" color="#f50">
+								{hh}
+							</Tag>
 						</div>
 					),
 					key: id,
@@ -110,12 +115,12 @@ function DetailTab() {
 				.flatMap((cumRap) =>
 					_.map(cumRap.lichChieuPhim, (lichChieuPhim) => ({
 						time: {
-							date: moment(lichChieuPhim.ngayChieuGioChieu).format("DD/MM/YYYY"),
-							dayOfWeek: moment(lichChieuPhim.ngayChieuGioChieu).format("dddd"),
+							date: lichChieuPhim.ngayChieuGioChieu,
+							dayOfWeek: moment(lichChieuPhim.ngayChieuGioChieu, "DD/MM/YYYY HH:mm:ss").format("dddd"),
 						},
 						cumRaps: [
 							{
-								maLichChieu: lichChieuPhim.maLichChieu,
+								maLichChieu: lichChieuPhim._id,
 								maCumRap: cumRap.maCumRap,
 								tenCumRap: cumRap.tenCumRap,
 								hinhAnh: cumRap.hinhAnh,
@@ -129,12 +134,15 @@ function DetailTab() {
 					time: groupedItems[0].time,
 					cumRaps: _.flatMap(groupedItems, (item) => item.cumRaps),
 				}))
-				.sortBy((item) => moment(item.time.date, "DD/MM/YYYY").unix())
+				.sortBy((item) => {
+					console.log("item", item);
+					return moment(item.time.date, "DD/MM/YYYY  HH:mm:ss").unix();
+				})
 				.value();
 			return {
 				// LOGO RẠP
 				label: (
-					<div className="flex items-center gap-2 p-2 hover:bg-[#2f2f2f5c] active:bg-[#2f2f2fb5] transition">
+					<div className="flex items-center gap-2 lg:p-2 hover:bg-[#2f2f2f5c] active:bg-[#2f2f2fb5] transition">
 						<img className="rounded-full w-12" src={cumRapChieu.logo} />
 						<Title className="hidden md:block" style={{ margin: 0 }} level={5}>
 							{cumRapChieu.tenHeThongRap}
@@ -149,7 +157,12 @@ function DetailTab() {
 	};
 
 	const renderTabLichChieu = () => {
-		return <Tabs style={{ width: "100%", zIndex: 3 }} tabPosition="left" items={renderRap()} />;
+		return (
+			<>
+				<Tabs className="hidden sm:flex" style={{ width: "100%", zIndex: 3 }} tabPosition="left" items={renderRap()} />
+				<Tabs className="flex sm:hidden" style={{ width: "100%", zIndex: 3 }} tabPosition="top" items={renderRap()} />
+			</>
+		);
 	};
 
 	const renderThongTinPhim = () => {
@@ -158,7 +171,7 @@ function DetailTab() {
 				<div className="space-y-2">
 					<p>
 						<span className="text-[#777]">Ngày khởi chiếu: </span>
-						<span>{moment(movieDetail.ngayKhoiChieu).format("DD/MM/YYYY")}</span>
+						<span>{movieDetail.ngayKhoiChieu}</span>
 					</p>
 					<p>
 						<span className="text-[#777]">Nội dung: </span>

@@ -1,96 +1,86 @@
-import { EditOutlined, DeleteOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Popconfirm, Space, Table } from "antd";
+import { EditOutlined, DeleteOutlined, SearchOutlined, CalendarOutlined } from "@ant-design/icons";
+import { Button, Input, Popconfirm, Space, Table, Tooltip, Typography } from "antd";
 import { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteMovieMID, getListMovieMID } from "../../redux/slices/movieSlice";
 import { navigate } from "../../App";
+import { lcStorage } from "../../helpers/localStorage";
+import { MOVIE_PARAM } from "./../../contants/movieContant";
+const { Paragraph } = Typography;
 
 function ListMovieAdminPage() {
+	const { userLogin } = useSelector((state) => state.userSlices);
+	useEffect(() => {
+		if (userLogin === null) navigate("/");
+	}, []);
+
+	const [searchText, setSearchText] = useState("");
+	const [searchedColumn, setSearchedColumn] = useState("");
+
+	const searchInput = useRef(null);
+
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(getListMovieMID());
 	}, []);
 	const { listMovie } = useSelector((state) => state.movieSlice);
-
-	const [searchText, setSearchText] = useState("");
-	const [searchedColumn, setSearchedColumn] = useState("");
-	const searchInput = useRef(null);
+	const changeObj = (item) => {
+		return JSON.parse(JSON.stringify(item));
+	};
+	const listMovieNew = changeObj(listMovie).map((item, i) => {
+		item.maPhim = i;
+		return item;
+	});
 
 	const handleSearch = (selectedKeys, confirm, dataIndex) => {
 		confirm();
 		setSearchText(selectedKeys[0]);
 		setSearchedColumn(dataIndex);
 	};
-	const handleReset = (clearFilters) => {
-		clearFilters();
-		setSearchText("");
-	};
+
 	const getColumnSearchProps = (dataIndex) => ({
-		filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-			<div
-				style={{
-					padding: 8,
-				}}
-				onKeyDown={(e) => e.stopPropagation()}
-			>
-				<Input
-					ref={searchInput}
-					placeholder={`Search ${dataIndex}`}
-					value={selectedKeys[0]}
-					onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-					onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+		filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => {
+			const renderTitle = () => {
+				if (dataIndex === "maPhim") return "ID";
+				if (dataIndex === "tenPhim") return "Tên phim";
+			};
+			return (
+				<div
 					style={{
-						marginBottom: 8,
-						display: "block",
+						padding: 8,
 					}}
-				/>
-				<Space>
-					<Button
-						type="primary"
-						onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-						icon={<SearchOutlined />}
-						size="small"
+					onKeyDown={(e) => e.stopPropagation()}
+				>
+					<Input
+						ref={searchInput}
+						placeholder={`Tìm kiếm ${renderTitle()}`}
+						value={selectedKeys[0]}
+						onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+						onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
 						style={{
-							width: 90,
+							marginBottom: 8,
+							display: "block",
 						}}
-					>
-						Search
-					</Button>
-					<Button
-						onClick={() => clearFilters && handleReset(clearFilters)}
-						size="small"
-						style={{
-							width: 90,
-						}}
-					>
-						Reset
-					</Button>
-					<Button
-						type="link"
-						size="small"
-						onClick={() => {
-							confirm({
-								closeDropdown: false,
-							});
-							setSearchText(selectedKeys[0]);
-							setSearchedColumn(dataIndex);
-						}}
-					>
-						Filter
-					</Button>
-					<Button
-						type="link"
-						size="small"
-						onClick={() => {
-							close();
-						}}
-					>
-						close
-					</Button>
-				</Space>
-			</div>
-		),
+					/>
+					<div className="flex gap-1">
+						<Button type="primary" onClick={() => handleSearch(selectedKeys, confirm, dataIndex)} icon={<SearchOutlined />} size="small">
+							Tìm kiếm
+						</Button>
+						<Button
+							className="w-full"
+							type="link"
+							size="small"
+							onClick={() => {
+								close();
+							}}
+						>
+							Đóng
+						</Button>
+					</div>
+				</div>
+			);
+		},
 		filterIcon: (filtered) => (
 			<SearchOutlined
 				style={{
@@ -127,20 +117,19 @@ function ListMovieAdminPage() {
 	const columns = [
 		{
 			title: "ID",
-			dataIndex: "maPhim",
-			...getColumnSearchProps("maPhim"),
+			dataIndex: "_id",
+			...getColumnSearchProps("_id"),
 			sorter: (item2, item1) => item2.maPhim - item1.maPhim,
 			sortDirections: ["descend", "ascend"],
 			editable: true,
-			className: "w-[30%] sm:w-[20%] md:w-[18%] lg:w-[15%] dark:bg-gray-800/50 backdrop-blur-sm",
+			className: "hidden sm:table-cell w-[30%] sm:w-[20%] md:w-[18%] lg:w-[15%] dark:bg-gray-800/50 backdrop-blur-sm",
 		},
 		{
 			title: "Hình ảnh",
-			render: (text) => {
-				// console.log(text, record, index);
+			render: (movie) => {
 				return (
-					<div className="w-20 h-20">
-						<img className="w-full h-full object-contain" src={text.hinhAnh} alt="" />
+					<div className="w-20">
+						<img className="w-full h-full object-contain rounded-md" src={movie.hinhAnh} alt="" />
 					</div>
 				);
 			},
@@ -156,8 +145,19 @@ function ListMovieAdminPage() {
 		},
 		{
 			title: "Mô tả",
-			dataIndex: "moTa",
-			...getColumnSearchProps("moTa"),
+			render: (movie) => {
+				return (
+					<Paragraph
+						ellipsis={{
+							rows: 2,
+							expandable: true,
+							symbol: "xem thêm",
+						}}
+					>
+						{movie.moTa}
+					</Paragraph>
+				);
+			},
 			editable: true,
 			className: "hidden sm:table-cell dark:bg-gray-800/50 backdrop-blur-sm",
 		},
@@ -166,19 +166,32 @@ function ListMovieAdminPage() {
 			render: (_, record) => {
 				return (
 					<div className="flex gap-2">
-						<Button
-							type="primary"
-							icon={<EditOutlined />}
-							onClick={() => {
-								navigate(`/edit-movie/${record.maPhim}`);
-							}}
-						/>
-						<Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.maPhim)}>
+						<Tooltip placement="top" title="Chỉnh sửa">
+							<Button
+								type="primary"
+								icon={<EditOutlined />}
+								onClick={() => {
+									navigate(`/edit-movie/${record._id}`);
+								}}
+							/>
+						</Tooltip>
+
+						<Tooltip placement="top" title="Lịch chiếu">
+							<Button
+								type="primary"
+								icon={<CalendarOutlined />}
+								onClick={() => {
+									lcStorage.set(MOVIE_PARAM, record);
+									navigate(`/show-time/${record._id}`);
+								}}
+							/>
+						</Tooltip>
+						<Popconfirm okText="Có" cancelText="Không" title="Bạn có chắc muốn xoá phim này?" onConfirm={() => handleDelete(record._id)}>
 							<Button
 								danger
 								icon={<DeleteOutlined />}
 								onClick={() => {
-									console.log(record.maPhim);
+									console.log(record._id);
 								}}
 							/>
 						</Popconfirm>
@@ -188,6 +201,7 @@ function ListMovieAdminPage() {
 			className: " lg:w-[10%] dark:bg-gray-800/50 backdrop-blur-sm",
 		},
 	];
+
 	return (
 		<section
 			className="pt-header 
@@ -199,9 +213,10 @@ function ListMovieAdminPage() {
 		>
 			<div className="container py-24">
 				<h1 className="text-center lg:text-start heading-1 mb-14">Danh sách phim</h1>
-				<Table rowKey={"maPhim"} theme={"dark"} columns={columns} dataSource={listMovie} />
+				<Table rowKey={"maPhim"} theme={"dark"} columns={columns} dataSource={listMovieNew} />
 			</div>
 		</section>
 	);
 }
+
 export default ListMovieAdminPage;

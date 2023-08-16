@@ -6,21 +6,35 @@ import { getListMovieMID } from "../../redux/slices/movieSlice";
 import Cinema from "./Cinema/Cinema";
 import Devices from "./Devices/Devices";
 import Divide from "../../components/Divide/Divide";
-import { setPlayingBannerREDU } from "../../redux/slices/bannerHomeSlice";
 import Media from "./Media/Media";
+import { navigate } from "../../App";
 
 function HomePage() {
+	const { userLogin } = useSelector((state) => state.userSlices);
+
+	useEffect(() => {
+		if (userLogin === null) navigate("/");
+	}, []);
 	const dispatch = useDispatch();
-	const { listMovie } = useSelector((state) => state.movieSlice);
+
+	const hideModal = async () => {
+		const modalMovieEl = document.querySelector(".modalMovie");
+		console.log(modalMovieEl);
+		if (modalMovieEl) {
+			modalMovieEl.style.display = "none";
+		}
+	};
 
 	useEffect(() => {
 		dispatch(getListMovieMID());
-		dispatch(setPlayingBannerREDU(true));
+		return () => {
+			hideModal();
+		};
 	}, []);
 
 	return (
 		<main className="bg-backgroundHome">
-			<Banner listMovie={listMovie} />
+			<Banner />
 			<ListMovie />
 			<Divide />
 			<Cinema />

@@ -2,12 +2,12 @@ import ButtonMe from "./../../components/Button/Button";
 import { DatePicker, Form, Input, Modal, Rate, Switch, Upload } from "antd";
 import style from "./AddMovieAdminPage.module.css";
 import TextArea from "antd/es/input/TextArea";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
-import { MANHOM } from "../../contants/apiContants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addMovieMID } from "../../redux/slices/movieSlice";
+import { navigate } from "../../App";
 const getBase64 = (file) =>
 	new Promise((resolve, reject) => {
 		const reader = new FileReader();
@@ -17,11 +17,16 @@ const getBase64 = (file) =>
 	});
 
 function AddMovieAdminPage() {
+	const { userLogin } = useSelector((state) => state.userSlices);
+
+	useEffect(() => {
+		if (userLogin === null) navigate("/");
+	}, []);
+
 	const dispatch = useDispatch();
 	const [form] = Form.useForm();
 	const onFinish = (values) => {
 		values.ngayKhoiChieu = moment(values.ngayKhoiChieu.$d).format("DD/MM/YYYY");
-		values.maNhom = MANHOM;
 		if (typeof values.hinhAnh === "object") {
 			values.hinhAnh = values.hinhAnh.file.originFileObj;
 		}
@@ -46,12 +51,13 @@ function AddMovieAdminPage() {
 			formData.append("hinhAnh", null);
 		}
 		if (typeof values.hinhAnh === "object") {
-			formData.append("File", values.hinhAnh, values.hinhAnh.name);
+			formData.append("hinhAnh", values.hinhAnh, values.hinhAnh.name);
 		}
-
 		console.log(formData.get("hinhAnh"));
+		console.log(formData.get("ngayKhoiChieu"));
 		dispatch(addMovieMID(formData)).then((result) => {
 			if (result?.mes) result?.type(result?.mes);
+			if (result?.mes === "Thêm phim thành công") navigate("/list-movie");
 		});
 	};
 
@@ -212,7 +218,7 @@ function AddMovieAdminPage() {
 						{/* BUTTON */}
 						<Form.Item>
 							<ButtonMe type="primary" size="big">
-								<span className="text-base font-medium">Cập nhật phim</span>
+								<span className="text-base font-medium">Thêm phim</span>
 							</ButtonMe>
 						</Form.Item>
 					</Form>

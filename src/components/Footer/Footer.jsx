@@ -7,7 +7,6 @@ import { navigate } from "../../App";
 function Footer() {
 	const { pathname } = useLocation();
 	const path = pathname.split("/")[1];
-	//
 	const backgroundColor = () => {
 		let backgroundColor = "bg-black";
 
@@ -20,7 +19,8 @@ function Footer() {
 			path === "checkout" ||
 			path === "list-movie" ||
 			path === "add-movie" ||
-			path === "edit-movie"
+			path === "edit-movie" ||
+			path === "show-time"
 		) {
 			backgroundColor = "bg-black/50";
 		}
@@ -30,11 +30,6 @@ function Footer() {
 
 	const containerFooter = () => {
 		let container = "container";
-
-		// if (pathname === "/home") {
-		// 	container = "px-[4%] 2xl:px-[60px]";
-		// }
-
 		return container;
 	};
 
@@ -44,9 +39,6 @@ function Footer() {
 				<div className="md:flex md:justify-between">
 					{/* CỘT LOGO */}
 					<div
-						data-aos-delay="500"
-						data-aos="fade-right"
-						data-aos-duration="1000"
 						className="flex flex-col lg:justify-between overflow-hidden 
 						space-y-10
 						lg:space-y-0
@@ -131,7 +123,7 @@ function Footer() {
 						"
 					>
 						{/* CỘT TRỢ GIÚP */}
-						<div data-aos-delay="500" data-aos="zoom-in" data-aos-duration="1000">
+						<div>
 							<h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Trợ giúp</h2>
 							<ul className="text-gray-500 dark:text-gray-500 font-medium space-y-2">
 								<li>
@@ -163,7 +155,7 @@ function Footer() {
 						</div>
 
 						{/* CỘT THÔNG TIN*/}
-						<div data-aos-delay="800" data-aos="zoom-in" data-aos-duration="1000">
+						<div>
 							<h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Thông tin</h2>
 							<ul className="text-gray-500 dark:text-gray-500 font-medium space-y-2">
 								<li>
@@ -205,7 +197,7 @@ function Footer() {
 						</div>
 
 						{/* CỘT KẾT NỐI*/}
-						<div data-aos-delay="1100" data-aos="zoom-in" data-aos-duration="1000">
+						<div>
 							<h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Kết nối</h2>
 							<ul className="text-gray-500 dark:text-gray-500 font-medium space-y-2">
 								<li className="">
@@ -239,7 +231,7 @@ function Footer() {
 				</div>
 			</div>
 			<hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-			<div data-aos-delay="800" data-aos="zoom-in" data-aos-duration="1000" className={`${containerFooter()} sm:flex sm:items-center justify-center pb-6`}>
+			<div className={`${containerFooter()} sm:flex sm:items-center justify-center pb-6`}>
 				<p
 					className="text-sm text-gray-500 sm:text-center dark:text-gray-400
 					text-center

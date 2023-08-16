@@ -14,7 +14,7 @@ import { message } from "antd";
 import AddMovieAdminPage from "./pages/AddMovieAdminPage/AddMovieAdminPage";
 import ListMovieAdminPage from "./pages/ListMovieAdminPage/ListMovieAdminPage";
 import EditMovieAdminPage from "./pages/EditMovieAdminPage/EditMovieAdminPage";
-import Loading from "./components/Loading.jsx/Loading";
+import Loading from "./components/Loading/Loading";
 export let navigate = null;
 export let success = null;
 export let error = null;
@@ -22,6 +22,10 @@ export let warning = null;
 import "aos/dist/aos.css";
 import AOS from "aos";
 import { useEffect } from "react";
+import ShowTimeAdminPage from "./pages/ShowTimeAdminPage/ShowTimeAdminPage";
+import ApiLayout from "./layouts/ApiLayout/ApiLayout";
+import ApiPage from "./pages/ApiPage/ApiPage";
+
 
 function App() {
 	useEffect(() => {
@@ -52,7 +56,7 @@ function App() {
 			<Loading />
 			{contextHolder}
 			<Routes>
-				{/* LANDING LAYOUT */}
+				{/* MAIN LAYOUT */}
 				<Route element={<MainLayout />}>
 					<Route index element={<LandingPage />} />
 
@@ -83,14 +87,15 @@ function App() {
 
 					<Route path="edit-movie/:id" element={<EditMovieAdminPage />} />
 
+					<Route path="show-time/:id" element={<ShowTimeAdminPage />} />
+
 					<Route path="home" element={<HomePage />} />
 				</Route>
 
-				{/* USER LAYOUT */}
-				{/* <Route element={<UserLayout />}>
-				<Route path="login" element={<Login />} />
-				<Route path="signin" element={<SignIn />} />
-			</Route> */}
+				{/* API LAYOUT */}
+				<Route element={<ApiLayout />}>
+					<Route path="api" element={<ApiPage />} />
+				</Route>
 
 				{/* OTHER */}
 				<Route path="*" element={<Navigate to={"/"} />} />

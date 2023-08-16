@@ -3,7 +3,6 @@ import ReactPlayer from "react-player/youtube";
 import { Progress, Rate, Typography } from "antd";
 import Button from "../../../components/Button/Button";
 import IconPlay from "../../../components/Icons/IconPlay";
-import IconInfo from "../../../components/Icons/IconInfo";
 import { useSelector } from "react-redux";
 import IconUnMute from "../../../components/Icons/IconUnMute";
 import IconRotate from "../../../components/Icons/IconRotate";
@@ -13,53 +12,54 @@ const { Paragraph } = Typography;
 
 function DetailBanner() {
 	const { movieDetail } = useSelector((state) => state.detailSlice);
+
 	const [playing, setPlaying] = useState(true);
+
 	const [muted, setMuted] = useState(true);
+
 	const playerRef = useRef(null);
+
 	const imgBackgroundBannerRef = useRef(null);
-	// const baseUrl = "https://www.youtube.com/embed/";
-	// const id2 = "OaDdVqW5CeE";
+
 	const onPause = () => {
 		console.log("onPause");
 		imgBackgroundBannerRef.current.style.opacity = 1;
 	};
+
 	const onPlay = () => {
 		console.log("onPlay");
 		imgBackgroundBannerRef.current.style.opacity = 0;
 	};
+
 	const onEnded = () => {
 		console.log("onEnded");
 		imgBackgroundBannerRef.current.style.opacity = 1;
 	};
+
 	const onProgress = (e) => {
 		const duration = playerRef.current.getDuration();
+
 		const timePause = duration - 15;
+
 		const playedSeconds = e.playedSeconds;
-		// console.log("playedSeconds", playedSeconds);
-		// console.log("timePause", timePause);
-		// console.log(playedSeconds > timePause);
-		if (playedSeconds > 5) {
-			setPlaying(false);
-			// dispatch(setEndedBannerREDU(true));
-		}
+
+		if (playedSeconds > timePause) setPlaying(false);
 	};
+
 	const handlePlayAgain = () => {
 		const player = playerRef.current.getInternalPlayer();
+
 		player.seekTo(0);
+
 		setPlaying(true);
-		// imgBackgroundBannerRef.current.style.opacity = 0;
-		// dispatch(setPlayingBannerREDU(true));
-		// dispatch(setEndedBannerREDU(false));
-		// imgBackgroundBannerRef.current.classList.remove(style.showImg);
 	};
+
 	const toggleMute = () => {
-		if (playing) {
-			setMuted(!muted);
-		}
-		if (!playing) {
-			handlePlayAgain();
-		}
+		if (playing) setMuted(!muted);
+
+		if (!playing) handlePlayAgain();
 	};
+
 	const renderIconVideo = () => {
 		if (playing) {
 			if (muted) {
@@ -106,7 +106,7 @@ function DetailBanner() {
 			);
 		}
 	};
-	const handleBuyMovie = () => {};
+
 	return (
 		<section className="pb-40 pt-32 relative">
 			{/* IMG BLUR */}
@@ -174,8 +174,8 @@ function DetailBanner() {
 								<div className=" flex-grow overflow-hidden">
 									<h1
 										className="font-black truncate leading-none
-										text-base text-center mb-2
-										sm:text-2xl sm:mb-4
+										text-center
+										text-lg
 										lg:text-4xl
 										xl:text-start
 										"
@@ -200,31 +200,25 @@ function DetailBanner() {
 										<Link to="detailTab" smooth={true} duration={500}>
 											<Button
 												className="flex items-center
-											py-0 px-2 gap-1
-											sm:py-1 sm:px-2 sm:gap-3
-											md:py-2 md:px-3
-											lg:py-2 lg:px-4
-											xl:py-3 xl:px-5
+											 gap-1
+											py-2 px-4
+											lg:py-3 lg:px-5
 											2xl:py-3 2xl:px-6
 											"
 												type="secondary"
 											>
 												<IconPlay
 													className="
-												w-2 h-2
-												sm:w-3 sm:h-3
-												md:w-4 md:h-4
-												lg:w-4 lg:h-4
+												
+												w-4 h-4
 												xl:w-5 xl:h-5
 												2xl:w-6 2xl:h-6
 												"
 												/>
 												<span
 													className=" font-semibold
-												text-[10px]
-												sm:text-sm
-												md:text-sm
-												lg:text-base
+												
+												text-base
 												xl:text-2xl
 												2xl:text-2xl
 												"
@@ -237,8 +231,9 @@ function DetailBanner() {
 								</div>
 
 								{/* ĐÁNH GIÁ */}
-								<div className="space-y-3 w-[18%] flex items-center flex-col flex-shrink-0">
-									<Progress strokeColor={"#7ed321"} type="circle" percent={(+movieDetail.danhGia / 5) * 100} />
+								<div className=" space-y-3 w-[18%] hidden xl:flex items-center flex-col flex-shrink-0">
+									{console.log(movieDetail.danhGia)}
+									<Progress format={(percent) => `${percent / 100 * 5}/5`} strokeColor={"#7ed321"} type="circle" percent={(+movieDetail.danhGia / 5) * 100} />
 									<Rate allowHalf value={+movieDetail.danhGia} />
 								</div>
 							</div>
