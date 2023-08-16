@@ -24,3 +24,8 @@ Netflix Ticket Booking is a ReactJS project developed during the final course at
 1. Clone the repository https://gitlab.com/huynhnhinguyen0301/netflix_huynhnhi.git
 2. Install project dependencies with the following command: npm install
 3. Start the development server by running: npm run dev
+
+## Deploy :
+
+link: 
+
